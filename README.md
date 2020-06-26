@@ -7,3 +7,5 @@ Java3D Tutorials, Tests and Uses (2010+)
         * comportements
         * ... 
     * Une vue du CyberEspace / CyberSpace
+
+***"To run, do not forget '-Djava.library.path="."' ..."***
