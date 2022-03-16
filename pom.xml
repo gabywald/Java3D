@@ -13,35 +13,44 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 
 		<java3d.version>1.5.2</java3d.version>
+		<java3d.version.alternative>1.3.1</java3d.version.alternative>
 	</properties>
 
-	<repositories>
-		<repository>
-			<id>Talan</id>
-			<name>Talan Repository</name>
-			<url>https://nexus.talanlabs.com/content/repositories/releases/</url>
-		</repository>
-	</repositories>
+	<!-- <repositories> <repository> <id>Talan</id> <name>Talan Repository</name> 
+		<url>https://nexus.talanlabs.com/content/repositories/releases/</url> </repository> 
+		</repositories> -->
+
+	<!-- <repositories> <repository> <id>MVN</id> <name>MVN Repository</name> 
+		<url>https://mvnrepository.com/artifact/</url> </repository> </repositories> -->
 
 	<dependencies>
 		<!-- https://mvnrepository.com/artifact/java3d/j3dutils -->
-		<dependency>
-			<groupId>java3d</groupId>
-			<artifactId>j3dutils</artifactId>
-			<version>${java3d.version}</version>
-		</dependency>
+		<!-- <dependency> <groupId>java3d</groupId> <artifactId>j3dutils</artifactId> 
+			<version>${java3d.version}</version> </dependency> -->
 		<!-- https://mvnrepository.com/artifact/java3d/j3dcore -->
-		<dependency>
-			<groupId>java3d</groupId>
-			<artifactId>j3dcore</artifactId>
-			<version>${java3d.version}</version>
-		</dependency>
+		<!-- <dependency> <groupId>java3d</groupId> <artifactId>j3dcore</artifactId> 
+			<version>${java3d.version}</version> </dependency> -->
 		<!-- https://mvnrepository.com/artifact/javax.vecmath/vecmath -->
 		<dependency>
 			<groupId>javax.vecmath</groupId>
 			<artifactId>vecmath</artifactId>
 			<version>${java3d.version}</version>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/java3d/j3d-core-utils -->
+		<dependency>
+			<groupId>java3d</groupId>
+			<artifactId>j3d-core-utils</artifactId>
+			<version>${java3d.version.alternative}</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/java3d/j3d-core -->
+		<dependency>
+			<groupId>java3d</groupId>
+			<artifactId>j3d-core</artifactId>
+			<version>${java3d.version.alternative}</version>
+		</dependency>
+
 	</dependencies>
 
 </project>
