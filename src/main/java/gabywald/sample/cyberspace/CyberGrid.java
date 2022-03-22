@@ -1,4 +1,4 @@
-package gabywald.biosilico.cyberspace;
+package gabywald.sample.cyberspace;
 
 import gabywald.cyberspace.components.User;
 import gabywald.cyberspace.objects.ElementContainer;
@@ -16,11 +16,10 @@ public class CyberGrid extends Scene {
 		this.grid = new EnvironmentCyber(minX,maxX,minZ,maxZ);
 		this.grid.decalage(1.0f, 1.0f, -0.0f);
 		
-		User test = new User(0.0f,0.0f,0.0f);
+		User test = new User(0.0f, 0.0f, 0.0f);
 		
 		this.localSpace.addChild(this.grid);
 		this.localSpace.addChild(test);
-		
 		
 		this.addChild(this.localSpace);
 	}

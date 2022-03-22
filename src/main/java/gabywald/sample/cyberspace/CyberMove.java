@@ -1,4 +1,4 @@
-package gabywald.biosilico.cyberspace;
+package gabywald.sample.cyberspace;
 
 import javax.media.j3d.TransformGroup;
 
@@ -23,7 +23,7 @@ public class CyberMove {
 	 */
 	public CyberMove(SimpleUniverse universe) { 
 		TransformGroup view = universe.getViewingPlatform().getViewPlatformTransform();
-		this.mvt = new Mouvement(view,0.0f,0.0f,5.0f);
+		this.mvt = new Mouvement(view, 0.0f, 0.0f, 5.0f);
 		this.dpl = new Deplacement(view,this.mvt);
 		
 		Thread move = new Thread(this.mvt);

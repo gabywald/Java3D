@@ -1,4 +1,4 @@
-package gabywald.biosilico.cyberspace;
+package gabywald.sample.cyberspace;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -17,6 +17,7 @@ import com.sun.j3d.utils.universe.SimpleUniverse;
 import gabywald.cyberspace.components.User;
 import gabywald.cyberspace.objects.Element;
 
+@SuppressWarnings("serial")
 public class CyberWorld extends JFrame 
 						implements ActionListener {
 	private static CyberWorld instance;
@@ -71,11 +72,9 @@ public class CyberWorld extends JFrame
 							CyberWorld.Ymov, CyberWorld.Zmov);
 		
 		/** Finishes the JFrame. */
-		// this.add(this.southPanel,"South");
+		// this.add(this.southPanel, BorderLayout.SOUTH);
 		
-		
-		
-		this.add(canvas3D,"Center");
+		this.add(canvas3D, BorderLayout.CENTER);
 		this.setTitle("BioSilico Modelization View");
 		this.setVisible(true);
 	}
@@ -144,12 +143,4 @@ public class CyberWorld extends JFrame
 		// this.mvt.initialize();
 	}
 	
-	public void enableCenterPanel(boolean b)	{ ; }
-	public void enableEasternPanel(boolean b)	{ ; }
-	public void enableNorthernPanel(boolean b)	{ ; }
-	public void enableSouthPanel(boolean b)		{ ; }
-	public void enableWesternPanel(boolean b)	{ ; }
-
-
-
 }
