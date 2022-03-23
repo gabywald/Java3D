@@ -1,6 +1,6 @@
-package gabywald.biosilico.launchers;
+package gabywald.sample.launchers;
 
-import gabywald.biosilico.cyberspace.CyberWorld;
+import gabywald.sample.cyberspace.CyberWorld;
 
 public class CyberWorldLauncher {
 	/** Unique instance of this launcher. */

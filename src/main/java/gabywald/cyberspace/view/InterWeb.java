@@ -135,9 +135,4 @@ public class InterWeb extends JFrame implements WindowListener {
 
 	public void windowClosing(WindowEvent e) 		{ System.exit(1); }
 
-	public static void main(String args[]) {
-		InterWeb myApp = new InterWeb();
-		myApp.setSize(1024, 768);
-		myApp.setVisible(true);
-	}
 }

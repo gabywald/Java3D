@@ -1,0 +1,7 @@
+20220322
+Specific 32 or 64 bits are 'j3dcore-ogl' (here 64 bits): j3dcore-ogl.dll and libj3dcore-ogl.so 
+*.dll are for Windows and *.so are for Unix/Linux Systems (including Mac OS X)
+
+Configuration for Eclipse IDE : include path to these libs via including directories into : 
+	Project Properties > Libraries > JRE System Librairies > Native Library Location 'Java3D/3Dlibs_64bits' or equivalent.
+	Set it also for Maven and other launch systems (including ant if necessary).  
