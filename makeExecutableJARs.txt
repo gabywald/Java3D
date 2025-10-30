@@ -1,0 +1,476 @@
+https://zetcode.com/maven/executable-jar/
+
+zetcode.com
+Maven Executable JAR - creating executable JARs with Assembly plugin
+Jan Bodnar
+15–19 minutes
+
+last modified June 9, 2025
+
+In this article we show how to create executable JAR files with all dependencies using the Maven Assembly Plugin.
+
+An executable JAR (also known as a "fat JAR" or "uber JAR") contains not only your compiled code but also all the dependencies required to run the application. This makes distribution and deployment much simpler since users only need to download a single file.
+Basic Executable JAR Example
+
+Let's start with a simple example that demonstrates how to create an executable JAR using the Assembly plugin with the built-in jar-with-dependencies descriptor.
+
+pom.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.example</groupId>
+    <artifactId>executable-jar-example</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+
+    <properties>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.13.1</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <source>11</source>
+                    <target>11</target>
+                </configuration>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.6.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.example.App</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+
+This POM configuration creates an executable JAR that includes all dependencies. The Assembly plugin is configured to run during the package phase and uses the built-in jar-with-dependencies descriptor.
+
+<mainClass>com.example.App</mainClass>
+
+Specifies the main class that contains the main method. This class will be executed when the JAR is run with java -jar.
+
+<descriptorRef>jar-with-dependencies</descriptorRef>
+
+Uses the built-in assembly descriptor that includes all dependencies in the final JAR file.
+
+<phase>package</phase>
+<goal>single</goal>
+
+Configures the plugin to run during the package phase and execute the single goal, which creates the assembly.
+Sample Application
+
+Let's create a simple application that uses the Gson library to demonstrate dependency inclusion:
+
+src/main/java/com/example/App.java
+
+package com.example;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import java.util.HashMap;
+import java.util.Map;
+
+public class App {
+    public static void main(String[] args) {
+        System.out.println("Creating executable JAR example");
+        
+        // Create a sample object to serialize
+        Map<String, Object> data = new HashMap<>();
+        data.put("name", "Maven Assembly Example");
+        data.put("version", "1.0.0");
+        data.put("executable", true);
+        
+        // Use Gson to convert to JSON
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String json = gson.toJson(data);
+        
+        System.out.println("Application data:");
+        System.out.println(json);
+        System.out.println("Executable JAR created successfully!");
+    }
+}
+
+Building the Executable JAR
+
+To create the executable JAR, run the following Maven command:
+
+$ mvn clean package
+
+This creates two JAR files in the target directory:
+
+target/
+├── executable-jar-example-1.0.0.jar                    # Regular JAR
+└── executable-jar-example-1.0.0-jar-with-dependencies.jar  # Executable JAR
+
+Running the Executable JAR
+
+You can now run the executable JAR directly:
+
+$ java -jar target/executable-jar-example-1.0.0-jar-with-dependencies.jar
+Creating executable JAR example
+Application data:
+{
+  "name": "Maven Assembly Example",
+  "version": "1.0.0",
+  "executable": true
+}
+Executable JAR created successfully!
+
+Custom Assembly Descriptor
+
+For more control over the assembly process, you can create a custom assembly descriptor. This allows you to specify exactly what gets included and how the JAR is structured.
+
+src/main/assembly/jar-with-dependencies.xml
+
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.1.1"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.1.1 
+          http://maven.apache.org/xsd/assembly-2.1.1.xsd">
+    <id>executable</id>
+    <formats>
+        <format>jar</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>/</outputDirectory>
+            <useProjectArtifact>false</useProjectArtifact>
+            <unpack>true</unpack>
+            <scope>runtime</scope>
+        </dependencySet>
+    </dependencySets>
+    
+    <fileSets>
+        <fileSet>
+            <directory>${project.build.outputDirectory}</directory>
+            <outputDirectory>/</outputDirectory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+    </fileSets>
+</assembly>
+
+This custom descriptor specifies the following features:
+
+    Formats: The output format is set to JAR.
+    Include Base Directory: Set to false, so the contents are placed directly in the JAR root.
+    Dependency Sets: Includes all runtime dependencies, unpacked into the JAR root directory.
+    File Sets: Includes all compiled classes and resources from the project's output directory.
+    Output Directory: Specifies the root directory for the included files.
+    Includes: Includes all files from the output directory.
+    Unpack: Unpacks all runtime dependencies into the JAR root directory.
+    Use Project Artifact: Set to false, so the project's main artifact is not included in the dependencies.
+    Scope: Set to runtime, so only runtime dependencies are included.
+    Output Directory: Specifies where the dependencies will be placed in the JAR.
+
+Now update the POM to use the custom descriptor:
+
+pom.xml (updated plugin configuration)
+
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-assembly-plugin</artifactId>
+    <version>3.6.0</version>
+    <configuration>
+        <archive>
+            <manifest>
+                <mainClass>com.example.App</mainClass>
+            </manifest>
+        </archive>
+        <descriptors>
+            <descriptor>src/main/assembly/jar-with-dependencies.xml</descriptor>
+        </descriptors>
+    </configuration>
+    <executions>
+        <execution>
+            <id>make-assembly</id>
+            <phase>package</phase>
+            <goals>
+                <goal>single</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
+
+This configuration specifies the custom assembly descriptor file to use instead of the built-in jar-with-dependencies descriptor.
+
+<descriptors>
+    <descriptor>src/main/assembly/jar-with-dependencies.xml</descriptor>
+</descriptors>
+
+Points to the custom assembly descriptor file instead of using the built-in jar-with-dependencies descriptor.
+
+<dependencySet>
+    <unpack>true</unpack>
+    <scope>runtime</scope>
+</dependencySet>
+
+Unpacks all runtime dependencies into the JAR root directory, making them available to the application.
+Multiple Main Classes Example
+
+Sometimes you need to create multiple executable JARs from the same project, each with a different main class. Here's how to achieve this:
+
+src/main/java/com/example/ServerApp.java
+
+package com.example;
+
+public class ServerApp {
+    public static void main(String[] args) {
+        System.out.println("Starting server application...");
+        System.out.println("Server is running on port 8080");
+        
+        // Simulate server running
+        try {
+            Thread.sleep(2000);
+            System.out.println("Server stopped gracefully");
+        } catch (InterruptedException e) {
+            System.err.println("Server interrupted: " + e.getMessage());
+        }
+    }
+}
+
+This is a simple server application that simulates starting a server and stopping it after a short delay. It prints messages to the console to indicate the server's status. You can run this application to see how it behaves as a standalone server application.
+
+src/main/java/com/example/ClientApp.java
+
+package com.example;
+
+public class ClientApp {
+    public static void main(String[] args) {
+        System.out.println("Starting client application...");
+        System.out.println("Connecting to server at localhost:8080");
+        System.out.println("Client operation completed");
+    }
+}
+
+This is a simple client application that simulates connecting to a server and performing a client operation. It prints messages to the console to indicate the client's actions. You can run this application to see how it behaves as a standalone client application.
+
+Create separate assembly descriptors for each application:
+
+src/main/assembly/server.xml
+
+<assembly>
+    <id>server</id>
+    <formats>
+        <format>jar</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>/</outputDirectory>
+            <useProjectArtifact>false</useProjectArtifact>
+            <unpack>true</unpack>
+            <scope>runtime</scope>
+        </dependencySet>
+    </dependencySets>
+    
+    <fileSets>
+        <fileSet>
+            <directory>${project.build.outputDirectory}</directory>
+            <outputDirectory>/</outputDirectory>
+        </fileSet>
+    </fileSets>
+</assembly>
+
+src/main/assembly/client.xml
+
+<assembly>
+    <id>client</id>
+    <formats>
+        <format>jar</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>/</outputDirectory>
+            <useProjectArtifact>false</useProjectArtifact>
+            <unpack>true</unpack>
+            <scope>runtime</scope>
+        </dependencySet>
+    </dependencySets>
+    
+    <fileSets>
+        <fileSet>
+            <directory>${project.build.outputDirectory}</directory>
+            <outputDirectory>/</outputDirectory>
+        </fileSet>
+    </fileSets>
+</assembly>
+
+Configure multiple plugin executions in the POM:
+
+pom.xml (multiple executions)
+
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-assembly-plugin</artifactId>
+    <version>3.6.0</version>
+    <executions>
+        <execution>
+            <id>server-assembly</id>
+            <phase>package</phase>
+            <goals>
+                <goal>single</goal>
+            </goals>
+            <configuration>
+                <archive>
+                    <manifest>
+                        <mainClass>com.example.ServerApp</mainClass>
+                    </manifest>
+                </archive>
+                <descriptors>
+                    <descriptor>src/main/assembly/server.xml</descriptor>
+                </descriptors>
+            </configuration>
+        </execution>
+        <execution>
+            <id>client-assembly</id>
+            <phase>package</phase>
+            <goals>
+                <goal>single</goal>
+            </goals>
+            <configuration>
+                <archive>
+                    <manifest>
+                        <mainClass>com.example.ClientApp</mainClass>
+                    </manifest>
+                </archive>
+                <descriptors>
+                    <descriptor>src/main/assembly/client.xml</descriptor>
+                </descriptors>
+            </configuration>
+        </execution>
+    </executions>
+</plugin>
+
+After building, you'll have multiple executable JARs:
+
+$ mvn clean package
+$ ls target/*.jar
+executable-jar-example-1.0.0.jar
+executable-jar-example-1.0.0-client.jar
+executable-jar-example-1.0.0-server.jar
+
+Run each application separately:
+
+$ java -jar target/executable-jar-example-1.0.0-server.jar
+Starting server application...
+Server is running on port 8080
+Server stopped gracefully
+
+$ java -jar target/executable-jar-example-1.0.0-client.jar
+Starting client application...
+Connecting to server at localhost:8080
+Client operation completed
+
+Assembly Plugin Configuration Options
+
+The Assembly plugin provides many configuration options for customizing the final JAR:
+
+Advanced plugin configuration
+
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-assembly-plugin</artifactId>
+    <version>3.6.0</version>
+    <configuration>
+        <!-- Append assembly id to final name -->
+        <appendAssemblyId>true</appendAssemblyId>
+        
+        <!-- Custom final name -->
+        <finalName>my-app</finalName>
+        
+        <!-- Archive configuration -->
+        <archive>
+            <manifest>
+                <mainClass>com.example.App</mainClass>
+                <addClasspath>true</addClasspath>
+                <classpathPrefix>lib/</classpathPrefix>
+            </manifest>
+            <manifestEntries>
+                <Built-By>Maven Assembly Plugin</Built-By>
+                <Implementation-Version>${project.version}</Implementation-Version>
+            </manifestEntries>
+        </archive>
+        
+        <!-- Attach assembled artifacts to project -->
+        <attach>true</attach>
+        
+        <!-- Skip assembly if no descriptor found -->
+        <skipAssembly>false</skipAssembly>
+        
+        <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+        </descriptorRefs>
+    </configuration>
+</plugin>
+
+<appendAssemblyId>true</appendAssemblyId>
+
+Controls whether the assembly ID is appended to the final JAR name. When true, creates files like myapp-1.0-jar-with-dependencies.jar.
+
+<addClasspath>true</addClasspath>
+<classpathPrefix>lib/</classpathPrefix>
+
+Adds a classpath entry to the manifest and specifies the prefix for dependency JARs. Useful when creating directory-based distributions.
+Source
+
+Maven Assembly Plugin - reference
+
+In this article we have shown how to create executable JAR files with all dependencies using the Maven Assembly Plugin.
+Author
+
+My name is Jan Bodnar, and I am a passionate programmer with extensive programming experience. I have been writing programming articles since 2007. To date, I have authored over 1,400 articles and 8 e-books. I possess more than ten years of experience in teaching programming.
+
+List all Java tutorials.

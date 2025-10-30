@@ -14,7 +14,87 @@
 
 		<java3d.version>1.5.2</java3d.version>
 		<java3d.version.alternative>1.3.1</java3d.version.alternative>
+		<!-- 1.6 ; 1.7 ? (compatibles java 6 et Java 8 respectivement -->
+		<!-- cf : https://gouessej.wordpress.com/2012/08/01/java-3d-est-de-retour-java-3d-is-back/-->
 	</properties>
+	
+	<build>
+		<sourceDirectory>src/main/java</sourceDirectory>
+		<testSourceDirectory>src/test/java</testSourceDirectory>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<!-- 
+				<filtering>false</filtering>
+				<directory>${basedir}/3Dlibs_64bits</directory>
+				<includes>
+					<include>*.so</include>
+					<include>*.dll</include>
+				</includes> -->
+				<includes>
+					<include>${basedir}/3Dlibs_64bits/*.so</include>
+					<include>${basedir}/3Dlibs_64bits/*.dll</include>
+				</includes>
+			</resource>
+		</resources>
+		<testResources>
+			<testResource>
+				<directory>src/test/resources</directory>
+			</testResource>
+		</testResources>
+	</build>
+	
+	<!-- if jogamp -->
+	<!-- 
+	<repositories>
+	    <repository>
+	        <id>jogamp-remote</id>
+	        <name>jogamp test mirror</name>
+	        <url>https://www.jogamp.org/deployment/maven/</url>
+	        <layout>default</layout>
+	    </repository>
+	    <repository>
+	        <id>jogamp-java3d-remote</id>
+	        <name>jogamp java3d test mirror</name>
+	        <url>https://www.jogamp.org/deployment/maven-java3d/</url>
+	        <layout>default</layout>
+	     </repository>
+	</repositories>
+	<dependencyManagement>
+	    <dependencies>
+	        <dependency>        
+	            <groupId>org.jogamp.gluegen</groupId>
+	            <artifactId>gluegen-rt-main</artifactId>
+	            <version>2.4.0</version>
+	        </dependency>
+	        <dependency>        
+	            <groupId>org.jogamp.jogl</groupId>
+	            <artifactId>jogl-all-main</artifactId>
+	            <version>2.4.0</version>
+	        </dependency>
+	        <dependency>
+	            <groupId>org.jogamp.joal</groupId>
+	            <artifactId>joal-main</artifactId>
+	            <version>2.4.0</version>
+	        </dependency>
+	        <dependency>
+	            <groupId>org.jogamp.java3d</groupId>
+	            <artifactId>java3d-core</artifactId>
+	            <version>1.7.1</version>
+	        </dependency>
+	        <dependency>
+	            <groupId>org.jogamp.java3d</groupId>
+	            <artifactId>java3d-utils</artifactId>
+	            <version>1.7.1</version>
+	        </dependency>
+	        <dependency>
+	            <groupId>org.jogamp.java3d</groupId>
+	            <artifactId>vecmath</artifactId>
+	            <version>1.7.1</version>
+	        </dependency>
+	    </dependencies> 
+	</dependencyManagement>
+	-->
 
 	<!-- <repositories> <repository> <id>Talan</id> <name>Talan Repository</name> 
 		<url>https://nexus.talanlabs.com/content/repositories/releases/</url> </repository> 
@@ -22,28 +102,45 @@
 
 	<!-- <repositories> <repository> <id>MVN</id> <name>MVN Repository</name> 
 		<url>https://mvnrepository.com/artifact/</url> </repository> </repositories> -->
-
+		
 	<dependencies>
+		<!-- if TALAN REPO 1.5.2 -->
 		<!-- https://mvnrepository.com/artifact/java3d/j3dutils -->
-		<!-- <dependency> <groupId>java3d</groupId> <artifactId>j3dutils</artifactId> 
-			<version>${java3d.version}</version> </dependency> -->
+		<!-- <dependency>
+			<groupId>java3d</groupId>
+			<artifactId>j3dutils</artifactId> 
+			<version>${java3d.version}</version>
+		</dependency> -->
 		<!-- https://mvnrepository.com/artifact/java3d/j3dcore -->
-		<!-- <dependency> <groupId>java3d</groupId> <artifactId>j3dcore</artifactId> 
-			<version>${java3d.version}</version> </dependency> -->
+		<!-- <dependency>
+			<groupId>java3d</groupId>
+			<artifactId>j3dcore</artifactId> 
+			<version>${java3d.version}</version>
+		</dependency> -->
 
-
+		<!-- if MAVEN CENTRAL REPO 1.3.1 -->
 		<!-- https://mvnrepository.com/artifact/javax.vecmath/vecmath -->
-		<!-- <dependency> <groupId>javax.vecmath</groupId> <artifactId>vecmath</artifactId> 
-			<version>${java3d.version}</version> </dependency> -->
+		<!-- https://mvnrepository.com/artifact/javax.vecmath/vecmath -->
+		<dependency>
+		    <groupId>javax.vecmath</groupId>
+		    <artifactId>vecmath</artifactId>
+		    <version>1.5.2</version>
+		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/java3d/j3d-core-utils -->
-		<!-- <dependency> <groupId>java3d</groupId> <artifactId>j3d-core-utils</artifactId> 
-			<version>${java3d.version.alternative}</version> </dependency> -->
+		<dependency>
+			<groupId>java3d</groupId>
+			<artifactId>j3d-core-utils</artifactId> 
+			<version>${java3d.version.alternative}</version>
+		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/java3d/j3d-core -->
-		<!-- <dependency> <groupId>java3d</groupId> <artifactId>j3d-core</artifactId> 
-			<version>${java3d.version.alternative}</version> </dependency> -->
-
+		<dependency>
+			<groupId>java3d</groupId>
+			<artifactId>j3d-core</artifactId> 
+			<version>${java3d.version.alternative}</version>
+		</dependency>
+			
 	</dependencies>
-
+	
 </project>
